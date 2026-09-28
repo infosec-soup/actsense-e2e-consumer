@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: infosec-soup/actsense-action-e2e@20ca233332cae3e490b8edd6f3ca6daa415861fe # 1.3.0
+      - uses: infosec-soup/actsense-action-e2e@36178b65dcea638ac3e307420c3fc21a37b336e4 # 1.3.0
         with:
           fail-on: high
 
@@ -34,7 +34,7 @@ jobs:
         with:
           persist-credentials: false
       - id: scan
-        uses: infosec-soup/actsense-action-e2e@20ca233332cae3e490b8edd6f3ca6daa415861fe # 1.3.0
+        uses: infosec-soup/actsense-action-e2e@36178b65dcea638ac3e307420c3fc21a37b336e4 # 1.3.0
         with:
           path: .github/workflows/deploy.yml
           fail-on: none
@@ -60,7 +60,7 @@ jobs:
         with:
           persist-credentials: false
       - id: scan
-        uses: infosec-soup/actsense-action-e2e@20ca233332cae3e490b8edd6f3ca6daa415861fe # 1.3.0
+        uses: infosec-soup/actsense-action-e2e@36178b65dcea638ac3e307420c3fc21a37b336e4 # 1.3.0
         with:
           baseline: .actsense-baseline.json
           fail-on: low
@@ -74,7 +74,7 @@ jobs:
           persist-credentials: false
       - id: scan
         continue-on-error: true
-        uses: infosec-soup/actsense-action-e2e@20ca233332cae3e490b8edd6f3ca6daa415861fe # 1.3.0
+        uses: infosec-soup/actsense-action-e2e@36178b65dcea638ac3e307420c3fc21a37b336e4 # 1.3.0
         with:
           fail-on: sometimes
           upload-sarif: "false"
