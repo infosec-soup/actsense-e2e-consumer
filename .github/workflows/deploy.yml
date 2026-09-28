@@ -3,6 +3,9 @@ on:
   push:
     branches: [main]
 permissions: write-all
+# Shifted lines to check fingerprints ignore line numbers.
+# Another comment.
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
