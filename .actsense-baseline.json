@@ -1,0 +1,117 @@
+{
+  "actsense_baseline": 1,
+  "findings": [
+    {
+      "fingerprint": "ee11cadcc5b554c9eba6",
+      "path": ".github/actions/greet/action.yml",
+      "type": "code_injection_via_input",
+      "severity": "medium",
+      "message": "Composite action interpolates input(s) who directly into a shell command (step: 'unnamed'). Any caller passing untrusted text (a PR title, branch name, comment) gets command injection. Map inputs to env: and quote the variables."
+    },
+    {
+      "fingerprint": "b769f61639c23ae3d7f0",
+      "path": ".github/actions/greet/action.yml",
+      "type": "unpinnable_composite_subaction",
+      "severity": "high",
+      "message": "Composite action uses sub-action 'actions/setup-node@main' without full commit SHA pinning. Tags and branches are mutable and pose security risks."
+    },
+    {
+      "fingerprint": "7c60aa897a8052e48ab5",
+      "path": ".github/workflows/actsense.yml",
+      "type": "excessive_write_permissions",
+      "severity": "medium",
+      "message": "Job 'scan' appears to be read-only but its GITHUB_TOKEN has write permissions (set at the job level). Grant write only to jobs that need it."
+    },
+    {
+      "fingerprint": "629147225956151f876f",
+      "path": ".github/workflows/actsense.yml",
+      "type": "github_token_write_permissions",
+      "severity": "medium",
+      "message": "Job 'options' GITHUB_TOKEN has write permissions: security-events"
+    },
+    {
+      "fingerprint": "e5ceb919507c722852d4",
+      "path": ".github/workflows/actsense.yml",
+      "type": "github_token_write_permissions",
+      "severity": "medium",
+      "message": "Job 'scan' GITHUB_TOKEN has write permissions: security-events"
+    },
+    {
+      "fingerprint": "c21dbd9da1ff508a0f8d",
+      "path": ".github/workflows/actsense.yml",
+      "type": "inconsistent_action_version",
+      "severity": "low",
+      "message": "Action 'actions/checkout' is used with different versions (3d3c42e5aac5ba805825da76410c181273ba90b1, v3) across 2 workflow file(s). This can lead to inconsistent behavior and security vulnerabilities."
+    },
+    {
+      "fingerprint": "02680e4ef802f897c2ba",
+      "path": ".github/workflows/deploy.yml",
+      "type": "github_token_write_all",
+      "severity": "high",
+      "message": "Workflow uses write-all permissions for GITHUB_TOKEN. This grants excessive access and significantly increases the attack surface."
+    },
+    {
+      "fingerprint": "9a4206f20307043566c4",
+      "path": ".github/workflows/deploy.yml",
+      "type": "insufficient_audit_logging",
+      "severity": "low",
+      "message": "Job 'deploy' performs sensitive operations that should have detailed audit logging. Insufficient logging makes forensic analysis difficult."
+    },
+    {
+      "fingerprint": "ba5c7e696a5b0bcca5e8",
+      "path": ".github/workflows/deploy.yml",
+      "type": "long_term_aws_credentials",
+      "severity": "high",
+      "message": "Job 'deploy' uses long-term AWS credentials (input 'aws-access-key-id') instead of OIDC. Long-term credentials are less secure and harder to rotate."
+    },
+    {
+      "fingerprint": "f2c343647dabdf67e346",
+      "path": ".github/workflows/deploy.yml",
+      "type": "malicious_curl_pipe_bash",
+      "severity": "critical",
+      "message": "Job 'deploy' contains curl piped to shell. This pattern can execute malicious code downloaded from the internet."
+    },
+    {
+      "fingerprint": "2a02b4f3f5d7c3d069ff",
+      "path": ".github/workflows/deploy.yml",
+      "type": "no_hash_pinning",
+      "severity": "medium",
+      "message": "Action 'aws-actions/configure-aws-credentials@v4' uses version tag 'v4' instead of an immutable commit SHA hash. Tags can be moved or overwritten, creating a security risk."
+    },
+    {
+      "fingerprint": "acaf7f2830f1c123bf50",
+      "path": ".github/workflows/deploy.yml",
+      "type": "no_hash_pinning",
+      "severity": "medium",
+      "message": "Action 'actions/checkout@v3' uses version tag 'v3' instead of an immutable commit SHA hash. Tags can be moved or overwritten, creating a security risk."
+    },
+    {
+      "fingerprint": "5a5123e82deea7c78b73",
+      "path": ".github/workflows/deploy.yml",
+      "type": "overly_permissive",
+      "severity": "high",
+      "message": "Workflow has write permissions to repository contents. This increases the attack surface if the workflow is compromised."
+    },
+    {
+      "fingerprint": "c736a27fc5d23cceef3e",
+      "path": ".github/workflows/deploy.yml",
+      "type": "risky_context_usage",
+      "severity": "low",
+      "message": "Job 'deploy' passes user-controllable context to an action input (step: 'unnamed'): github.event.head_commit.message. Confirm the action treats this input as data and does not execute it."
+    },
+    {
+      "fingerprint": "170b7ca5026c9b7dfae0",
+      "path": ".github/workflows/deploy.yml",
+      "type": "spoofable_actor_condition",
+      "severity": "medium",
+      "message": "Job 'deploy' gates behaviour on github.actor/github.triggering_actor. The actor context is spoofable in several trigger contexts and is not a reliable trust boundary."
+    },
+    {
+      "fingerprint": "8d6466c33548ca1af8e4",
+      "path": ".github/workflows/deploy.yml",
+      "type": "unfiltered_network_traffic",
+      "severity": "low",
+      "message": "Job 'deploy' makes outbound network connections with no egress filtering configured. If a step or dependency is compromised, nothing restricts where it can send credentials or data."
+    }
+  ]
+}
