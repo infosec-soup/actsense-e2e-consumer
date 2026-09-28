@@ -1,0 +1,20 @@
+name: deploy
+on:
+  push:
+    branches: [main]
+permissions: write-all
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.actor == 'nobody-e2e-placeholder'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - run: curl -sSL https://example.com/install.sh | bash
+      - uses: ./.github/actions/greet
+        with:
+          who: ${{ github.event.head_commit.message }}

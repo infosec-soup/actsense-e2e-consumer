@@ -1,0 +1,86 @@
+name: actsense
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # Copied verbatim from the README (only the action repo differs).
+  scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write # upload SARIF to the Security tab
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: infosec-soup/actsense-action-e2e@20ca233332cae3e490b8edd6f3ca6daa415861fe # 1.3.0
+        with:
+          fail-on: high
+
+  # Every other input.
+  options:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - id: scan
+        uses: infosec-soup/actsense-action-e2e@20ca233332cae3e490b8edd6f3ca6daa415861fe # 1.3.0
+        with:
+          path: .github/workflows/deploy.yml
+          fail-on: none
+          min-severity: medium
+          online: "true"
+          sarif-file: out/deploy.sarif
+          category: actsense-deploy
+      - name: Check outputs
+        env:
+          EXIT_CODE: ${{ steps.scan.outputs.exit-code }}
+          SARIF: ${{ steps.scan.outputs.sarif-file }}
+        run: |
+          echo "exit-code=$EXIT_CODE sarif=$SARIF"
+          test "$EXIT_CODE" = 0
+          test -s "$SARIF"
+          jq -e '[.runs[0].results[].properties.severity] | all(. != "low")' "$SARIF"
+          jq -r '.runs[0].results[] | "\(.properties.severity) \(.ruleId)"' "$SARIF" | sort | uniq -c
+
+  baseline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - id: scan
+        uses: infosec-soup/actsense-action-e2e@20ca233332cae3e490b8edd6f3ca6daa415861fe # 1.3.0
+        with:
+          baseline: .actsense-baseline.json
+          fail-on: low
+          upload-sarif: "false"
+
+  bad-input:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - id: scan
+        continue-on-error: true
+        uses: infosec-soup/actsense-action-e2e@20ca233332cae3e490b8edd6f3ca6daa415861fe # 1.3.0
+        with:
+          fail-on: sometimes
+          upload-sarif: "false"
+      - env:
+          EXIT_CODE: ${{ steps.scan.outputs.exit-code }}
+          OUTCOME: ${{ steps.scan.outcome }}
+        run: |
+          echo "exit-code=$EXIT_CODE outcome=$OUTCOME"
+          test "$EXIT_CODE" = 2 && test "$OUTCOME" = failure
